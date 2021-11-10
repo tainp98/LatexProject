@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{placeins}
+\graphicspath{{./images/}}
+\begin{document}
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}}
+\renewcommand{\labelenumiv}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.\arabic{enumiv}}
+\begin{enumerate}
+\item \textbf{Graph Cuts on GPU}
+\begin{enumerate}
+    \item Push-Relabel algorithm
+    
+    // describe push-relabel algorithm
+    \item Push-Relabel implemented on CUDA
+    \begin{enumerate}
+        \item Graph construct on CUDA
+        
+        Symbols A(i), B(i) are respectively gray level values at pixel i 
+        corresponding to two parts of the image that are determined to be 
+        the area overlapping.
+
+        Formula that calculate weight between 2 adjacency edges taken from graphcut textures 
+        paper of Vivek Kwatra Arno Schodl Irfan Essa Greg Turk Aaron Bobick.
+        \begin{equation}
+            $$ c(u,v) = c(v,u) = A(u)-B(u) + A(v)-B(v) $$
+        \end{equation}
+        \begin{figure}[h]
+            \includegraphics[width=0.5\textwidth]{graphConstruct.png}
+            \caption{Figure 1: Graph construction }
+            \centering
+        \end{figure}
+
+        \item Data representation (unify memory)
+        
+        We construct a 4-connectivity graph, so we need 4 arrays with each array size equal
+        |V|, V is set of vertices of graph G to hold 4 weights for each node corresponding 
+        it’s 4 adjacency edges. To access all weights of node i, we access i-th element of 
+        all 4 arrays. If the node lacks any adjacency edge, the weight on that side equal 0. 
+        One array of size |V| contain excess flow of all vertices and one array of size |V|
+        hold heigh of all vertices. Relabel kernel ollow the push kernel. Relabel kernel needs 
+        to know which nodes are in need of relabeling, so it is necessary to have a relabel 
+        mask array of size |V| to mark the nodes that need relabel.
+
+        \begin{figure}[!h]
+            \includegraphics[width=0.5\textwidth]{pushkerneldata.png}
+            \caption{Figure 2: Data for push kernel}
+        \end{figure}
+        \FloatBarrier
+
+        \begin{figure}[!h]
+            \includegraphics[width=0.5\textwidth]{relabelkerneldata.png}
+            \caption{Figure 2: Data for push kernel}
+        \end{figure}
+        \FloatBarrier
+
+        \item Push kernel
+        \item Relabel kernel
+        \item Global relabel CPU
+        \item Overall graphcut algorithm
+    \end{enumerate}
+\end{enumerate}
+\item Result and evaluating
+\begin{enumerate}
+    \item Result
+    \item Improved method
+    \item Result after using improved method
+\end{enumerate}
+\end{enumerate}
+
+
+\end{document}
